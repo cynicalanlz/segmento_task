@@ -119,24 +119,11 @@ def get_data(c):
 
 
 class Handler:
-    """
-    Handls thread spawn requests.
-    Keeps track on not unique tokens.
-
-    Асинхронный хендлер, который создает потоки slack_messaging, к
-    огда приходит http запрос на урл
-    /slack_api/v1/slack_team_process
-
-
-    """
     def __init__(self):
         pass
 
     @asyncio.coroutine
     def handle_data(self, request):
-        """
-        Async handler couroutine that spawns threads
-        """
 
         c = api.OAuthClient(
             client_id,
@@ -159,8 +146,6 @@ class Handler:
             context
             )
            
-
-
         response.headers['Content-Language'] = 'en'
         return response
 
