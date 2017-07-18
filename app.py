@@ -18,18 +18,14 @@ def get_data(c):
     spaces = dict([(space['name'], space['space_id']) for space in spaces])
 
     apps = []
-
     for key in spaces.keys():
         for app in c.Application.list_in_space(spaces[key]):
             apps.append((app['config']['item_name'], app['app_id']))
-
-
     apps = dict(apps)
-
 
     mediaplans = c.Item.filter(apps['Mediaplan'],{'limit' : 500})
     mediaplans_items = []
-
+    
     for item in mediaplans['items']:
         mediaplan = {}
         for field in item['fields']:        
@@ -55,16 +51,14 @@ def get_data(c):
     start_date = datetime.now() - timedelta(days=90)
     mediaplans_df = mediaplans_df[mediaplans_df['Date'] > start_date]
     mediaplans_df = mediaplans_df[mediaplans_df['Status'] == 'Confirmed']
-
     print(mediaplans_df)
 
     account_manager_items = []
     account_manager_df = mediaplans_df.groupby(['Account Manager'])['Mediaplan Name'].nunique()
 
-
     campaigns = c.Item.filter(apps['Campaign'],{'limit' : 500})
     campaigns_items = []
-
+    
     for item in campaigns['items']:
         campaign = {}
 
@@ -87,12 +81,9 @@ def get_data(c):
                 vals = vals[0]['value']['title']
             else:
                 continue            
-
             campaign[label] = vals
 
         campaigns_items.append(campaign)
-
-
 
     campaigns_df = pd.DataFrame.from_dict(campaigns_items)
 
@@ -107,11 +98,9 @@ def get_data(c):
     is_active = df3['Status_y'] == 'Active'
 
     converted = df3[ has_campaign & is_active ]['Mediaplan Name'].nunique() / df3['Mediaplan Name'].nunique()
-
     print(converted)
 
     has_campaign_num = df3[has_campaign]['Mediaplan Name'].nunique()
-
     print(has_campaign_num)
 
     return account_manager_df, converted, has_campaign_num
@@ -124,7 +113,6 @@ class Handler:
 
     @asyncio.coroutine
     def handle_data(self, request):
-
         c = api.OAuthClient(
             client_id,
             client_secret,
@@ -133,7 +121,6 @@ class Handler:
         )
 
         account_manager_df, converted, has_campaign_num = get_data(c)
-
         context = {
             'table' : account_manager_df.to_frame().to_html(),
             'converted' : converted,
@@ -145,7 +132,6 @@ class Handler:
             request,
             context
             )
-           
         response.headers['Content-Language'] = 'en'
         return response
 
