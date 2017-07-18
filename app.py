@@ -151,14 +151,11 @@ class Handler:
 
 
 def main():
-    # starting thread spawning application
-    # тут запускается веб-приложение на aiohttp, которое обрабатывает запросы
-    # на открытие slack_messaging
+    TEMPLATES_PATH = '/home/usr/dev/segmento/templates' # needs to be customized
     app = web.Application()
     handler = Handler()
     app.router.add_get('/', handler.handle_data)
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('/home/usr/dev/segmento/templates'))
-
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(TEMPLATES_PATH)) 
     web.run_app(app, host='127.0.0.1', port=8081)
 
 if __name__ == "__main__":
