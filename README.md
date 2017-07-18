@@ -1,1 +1,3 @@
-## Microservice that reads  and creates web-service with data-product above data obtained from Podio Rest API
+## Solution 
+
+Microservice that creates web-service with data-product of data obtained from Podio Rest API.
